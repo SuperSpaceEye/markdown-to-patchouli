@@ -10,8 +10,8 @@ class Book(val name: String, val landing_text: String) {
     }
 
     companion object {
-        val br = "\\\$\\(br\\)"
-        val pattern = Regex("^(\\s*$br\\s*)*(.*?)$br.*$")
+        private const val br = "\\\$\\(br\\)"
+        private val pattern = Regex("^(\\s*$br\\s*)*(.*?)$br.*$")
         fun fromEntry(entry: Entry): Book {
             var description = entry.pages[0].text
             description = description

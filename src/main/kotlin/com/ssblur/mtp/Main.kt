@@ -162,8 +162,6 @@ class Main(private val namespace: String, private val bookId: String, private va
         else
             basePath
 
-        println(input.absolutePath)
-
         for (file in input.listFiles()!!) {
             if (file.isDirectory)
                 processDir(file.absolutePath)
@@ -176,6 +174,6 @@ class Main(private val namespace: String, private val bookId: String, private va
     }
 
     fun debug() {
-        println("$namespace, $bookId, $path, $outputPath")
+
     }
 }
