@@ -6,7 +6,7 @@
 
 MTP is currently published on the Gradle Plugin Portal.
 To use it, you can add `gradlePluginPortal()` to `pluginManagement.repositories`
-and `id "com.ssblur.mtp"`, optionally with a version specifier.
+and `id "com.ssblur.mtp"`, optionally with a version specifier, to `plugins`.
 
 You can configure this plugin using the `mtp` Object. 
 Usage (with default values) is detailed below.
