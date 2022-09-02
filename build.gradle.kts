@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("org.jetbrains.kotlin.jvm") version "1.5.31"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradle.plugin-publish") version "1.0.0-rc-1"
     `java`
     `java-gradle-plugin`
     `maven-publish`
@@ -46,6 +47,10 @@ gradlePlugin {
             description = "A Gradle plugin for generating Patchouli books from Markdown documentation"
         }
     }
+
+    repositories {
+        gradlePluginPortal()
+    }
 }
 
 publishing {
@@ -57,5 +62,11 @@ publishing {
             version = "1.0.0"
         }
     }
+}
+
+pluginBundle {
+    website = "https://ssblur.com"
+    vcsUrl = "https://github.com/ssblur/markdown-to-patchouli"
+    tags = listOf("minecraft", "modding")
 }
 
