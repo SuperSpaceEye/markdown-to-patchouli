@@ -38,7 +38,7 @@ reasonable default for multiloader projects.
 
 ## Expectations and Behavior
 
-This mod expects a `README.md` file in any directories, which will be used
+This mod expects a `README.md` file in any directories which will be used
 as categories, and a root `README.md` in the `input` directory, which will
 be used to generate the book's landing text and title.
 
