@@ -4,8 +4,10 @@
 
 ## Basic Usage
 
-This plugin is published as a Github Artifact. 
-More information will be added later.
+This plugin is published as a Github Package to this repository.
+Simply add `https://maven.pkg.github.com/ssblur/markdown-to-patchouli`
+to your project's `repositories` and add the plugin to your `plugins` with
+`id "com.ssblur.mtp"`, optionally with a version specifier.
 
 You can configure this plugin using the `mtp` Object. 
 Usage (with default values) is detailed below.

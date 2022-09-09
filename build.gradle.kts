@@ -52,7 +52,7 @@ publishing {
     publications {
         register("mavenJava", MavenPublication::class) {
             from(components["java"])
-            groupId = "com.ssblur.mtp"
+            groupId = "com.ssblur"
             artifactId = "mtp"
             version = "1.0.1"
         }
