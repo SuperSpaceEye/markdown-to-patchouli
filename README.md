@@ -9,6 +9,9 @@ Simply add `https://maven.pkg.github.com/ssblur/markdown-to-patchouli`
 to your project's `repositories` and add the plugin to your `plugins` with
 `id "com.ssblur.mtp"`, optionally with a version specifier.
 
+NOTE: Currently Maven for Github Packages requires authentication. 
+I am working on setting up an alternative which is easier to use.
+
 You can configure this plugin using the `mtp` Object. 
 Usage (with default values) is detailed below.
 
