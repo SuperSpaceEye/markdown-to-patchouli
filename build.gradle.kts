@@ -46,16 +46,6 @@ gradlePlugin {
             description = "A Gradle plugin for generating Patchouli books from Markdown documentation"
         }
     }
-
-    repositories {
-        maven {
-            url = uri("https://maven.pkg.github.com/ssblur/markdown-to-patchouli")
-            credentials {
-                username = System.getenv("GITHUB_USER")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }
 
 publishing {
@@ -65,6 +55,16 @@ publishing {
             groupId = "com.ssblur.mtp"
             artifactId = "mtp"
             version = "1.0.1"
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri("https://maven.pkg.github.com/ssblur/markdown-to-patchouli")
+            credentials {
+                username = System.getenv("GITHUB_USER")
+                password = System.getenv("GITHUB_TOKEN")
+            }
         }
     }
 }
