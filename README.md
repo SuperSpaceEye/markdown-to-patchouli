@@ -4,9 +4,8 @@
 
 ## Basic Usage
 
-MTP is currently published on the Gradle Plugin Portal.
-To use it, you can add `gradlePluginPortal()` to `pluginManagement.repositories`
-and `id "com.ssblur.mtp"`, optionally with a version specifier, to `plugins`.
+This plugin is published as a Github Artifact. 
+More information will be added later.
 
 You can configure this plugin using the `mtp` Object. 
 Usage (with default values) is detailed below.
@@ -62,3 +61,21 @@ Pages will automatically be broken after ~500 non-zero-width characters,
 and will attempt to break on whitespace or zero-width breaks.
 In the future, this will include valid formatting tags which do not 
 break lines or insert characters.
+
+## Examples
+
+For an example project, you can check out 
+[Redderstone](https://github.com/ssblur/redderstone).
+This project uses MTP to generate in-game documentation from Markdown files
+located in the documentation directory.
+
+If you have a project which uses MTP, and would like it to be featured here,
+feel free to either open a PR or shoot an email to 
+[info@ssblur.com](mailto:info@ssblur.com).
+
+## Contributing
+
+If there's a feature missing which you think should be included in this 
+project, either open an Issue or PR, or email
+[info@ssblur.com](mailto:info@ssblur.com).
+with a suggestion.
