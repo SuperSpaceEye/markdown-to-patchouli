@@ -28,14 +28,14 @@ class Main(private val namespace: String, private val bookId: String, private va
         ImageMatch(namespace),
         LinkMatch(),
         ExactMatch("", "\$(br)"),
-        RegexMatch("^ [*-] (.*)", "\\\$(li)$1\\\$()"),
-        RegexMatch("^ [*-] [*-] (.*)", "\\\$(li2)$1\\\$()"), // Lazy
-        RegexMatch("^ [*-] [*-] [*-] (.*)", "\\\$(li3)$1\\\$()"),
-        RegexMatch("^ [*-] [*-] [*-] [*-] (.*)", "\\\$(li4)$1\\\$()"),
+        RegexMatch("(^|^ )[*-] (.*)", "\\\$(li)$2\\\$()"), // start of str or start and space then * then space and text
+        RegexMatch("(^|^ )[*-] [*-] (.*)", "\\\$(li2)$2\\\$()"),
+        RegexMatch("(^|^ )[*-] [*-] [*-] (.*)", "\\\$(li3)$2\\\$()"),
+        RegexMatch("(^|^ )[*-] [*-] [*-] [*-] (.*)", "\\\$(li4)$2\\\$()"),
         RegexMatch("\\*\\*(.*?)\\*\\*", "\\\$(l)$1\\\$()"),
-        RegexMatch("(\\s|^)__(.*?)__(\\s|\$)", "\\\$(l)$1\\\$()"), // only between __ when on left nothing or whitespace, on right nothing or whitespace
+        RegexMatch("(\\s|^)__(.*?)__(\\s|\$)", "\\\$(l)$2\\\$()"), // only between __ when on left nothing or whitespace, on right nothing or whitespace
         RegexMatch("\\*(.*?)\\*", "\\\$(o)$1\\\$()"),
-        RegexMatch("(\\s|^)_(.*?)_(\\s|\$)", "\\\$(o)$1\\\$()"), // only between _ when on left nothing or whitespace, on right nothing or whitespace
+        RegexMatch("(\\s|^)_(.*?)_(\\s|\$)", "\\\$(o)$2\\\$()"), // only between _ when on left nothing or whitespace, on right nothing or whitespace
         RegexMatch("~~(.*?)~~", "\\\$(s)$1\\\$()"),
     )
 
