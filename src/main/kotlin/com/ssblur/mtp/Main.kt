@@ -33,9 +33,9 @@ class Main(private val namespace: String, private val bookId: String, private va
         RegexMatch("^ [*-] [*-] [*-] (.*)", "\\\$(li3)$1\\\$()"),
         RegexMatch("^ [*-] [*-] [*-] [*-] (.*)", "\\\$(li4)$1\\\$()"),
         RegexMatch("\\*\\*(.*?)\\*\\*", "\\\$(l)$1\\\$()"),
-        RegexMatch("__(.*?)__", "\\\$(l)$1\\\$()"),
+        RegexMatch("(\\s|^)__(.*?)__(\\s|\$)", "\\\$(l)$1\\\$()"), // only between __ when on left nothing or whitespace, on right nothing or whitespace
         RegexMatch("\\*(.*?)\\*", "\\\$(o)$1\\\$()"),
-        RegexMatch("_(.*?)_", "\\\$(o)$1\\\$()"),
+        RegexMatch("(\\s|^)_(.*?)_(\\s|\$)", "\\\$(o)$1\\\$()"), // only between _ when on left nothing or whitespace, on right nothing or whitespace
         RegexMatch("~~(.*?)~~", "\\\$(s)$1\\\$()"),
     )
 
@@ -51,16 +51,23 @@ class Main(private val namespace: String, private val bookId: String, private va
     }
 
     private fun generateData() {
-        val path = File(outputPath)
+        val bookPath = File(outputPath)
             .resolve("data")
             .resolve(namespace)
             .resolve("patchouli_books")
             .resolve(bookId)
-        path.delete()
+        bookPath.deleteRecursively()
+        bookPath.mkdir()
+        val path = File(outputPath)
+            .resolve("assets")
+            .resolve(namespace)
+            .resolve("patchouli_books")
+            .resolve(bookId)
+        path.deleteRecursively()
         path.mkdir()
         for (entry in list) {
             if (entry.id.lowercase() == "readme") {
-                val file = path.resolve("book.json")
+                val file = bookPath.resolve("book.json")
                 Files.createDirectories(Paths.get(file.parent))
                 file.writeText(Book.fromEntry(entry).serialize()!!)
             } else if (entry.id.lowercase().endsWith("readme")) {

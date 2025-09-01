@@ -34,6 +34,7 @@ tasks {
 tasks {
     build {
         dependsOn(shadowJar)
+        finalizedBy(publishToMavenLocal)
     }
 }
 
@@ -55,16 +56,6 @@ publishing {
             groupId = "com.ssblur"
             artifactId = "mtp"
             version = "1.0.1"
-        }
-    }
-
-    repositories {
-        maven {
-            url = uri("https://maven.pkg.github.com/ssblur/markdown-to-patchouli")
-            credentials {
-                username = System.getenv("GITHUB_USER")
-                password = System.getenv("GITHUB_TOKEN")
-            }
         }
     }
 }
