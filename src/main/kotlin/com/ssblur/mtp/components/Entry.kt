@@ -11,10 +11,12 @@ class Entry(id: String) {
         "icon" to "minecraft:book",
     )
 
-    val id: String get() = data["id"] as String
-    val name: String get() = data["name"] as String
-    val icon: String get() = data["icon"] as String
-    val category: String get() = data["category"] as String
+    var id: String get() = data["id"] as String; set(value) {data["id"] = value}
+    var name: String get() = data["name"] as String; set(value) {data["name"] = value}
+    var icon: String get() = data["icon"] as String; set(value) {data["icon"] = value}
+    var category: String get() = data["category"] as String; set(value) {data["category"] = value}
+
+    val unknownModifiers = mutableMapOf<String, Any>()
 
     fun newPage(): Page {
         pages += Page()
@@ -49,6 +51,8 @@ class Entry(id: String) {
     fun canFitWhole(text: String) = text.length <= pageSize
 
     fun addText(text: String) {
+        if (text.isEmpty()) return
+
         val split = findSplit(text)
         if(split == 0) {
             lastPage().text += text
@@ -67,9 +71,13 @@ class Entry(id: String) {
     }
 
     fun finalize() {
-        data["name"] = pages[0].title
-        for(page in pages)
+        if (data["name"] == null || name.isEmpty()) {
+            data["name"] = pages[0].title
+        }
+
+        for(page in pages) {
             page.text = page.text.replace(trimPattern, "")
+        }
     }
 
     override fun toString(): String {

@@ -1,5 +1,6 @@
 import com.ssblur.mtp.components.Book
 import com.ssblur.mtp.components.Category
+import com.ssblur.mtp.processor.ModifierMatch
 import components.Entry
 import processor.*
 import java.awt.Color
@@ -7,12 +8,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Scanner
 import javax.imageio.ImageIO
-import kotlin.io.path.absolute
-import kotlin.io.path.exists
-import kotlin.math.pow
-import kotlin.math.roundToInt
 
 class Main(private val namespace: String, private val bookId: String, private val path: String, private val outputPath: String) {
     private val basePath = File(path)
@@ -22,6 +18,8 @@ class Main(private val namespace: String, private val bookId: String, private va
         .resolve(namespace)
         .resolve("textures")
         .resolve("gui");
+
+    private val modifierMatch = ModifierMatch()
 
     private val processors = arrayOf(
         TitleMatch(),
@@ -111,8 +109,12 @@ class Main(private val namespace: String, private val bookId: String, private va
 
         for (line in input.readLines()) {
             var result = line
-            for (p in processors)
+            result = modifierMatch.process(result, entry).trimEnd()
+            //if there were only modifiers on the line, then do not save empty space
+            if (result.isEmpty() && result != line) continue
+            for (p in processors) {
                 result = p.process(result, entry).trimEnd() + " "
+            }
             entry.addText(result)
         }
 
