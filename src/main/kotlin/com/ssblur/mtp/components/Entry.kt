@@ -17,6 +17,7 @@ class Entry(id: String) {
     var category: String get() = data["category"] as String; set(value) {data["category"] = value}
 
     val unknownModifiers = mutableMapOf<String, Any>()
+    var locale = "en_us"
 
     fun newPage(): Page {
         pages += Page()

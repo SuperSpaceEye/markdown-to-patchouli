@@ -76,14 +76,14 @@ class Main(private val namespace: String, private val bookId: String, private va
                 file.writeText(Book.fromEntry(entry).serialize()!!)
             } else if (entry.id.lowercase().endsWith("readme")) {
                 var file = path
-                    .resolve("en_us")
+                    .resolve(entry.locale)
                     .resolve("categories")
                     .resolve(entry.category.lowercase().replace(Regex("^" + namespace + ":"), "") + ".json")
                 Files.createDirectories(Paths.get(file.parent))
                 file.writeText(Category.fromEntry(entry).serialize()!!)
             } else {
                 val file = path
-                    .resolve("en_us")
+                    .resolve(entry.locale)
                     .resolve("entries")
                     .resolve(entry.id.lowercase() + ".json")
                 Files.createDirectories(Paths.get(file.parent))
@@ -97,6 +97,7 @@ class Main(private val namespace: String, private val bookId: String, private va
         val stripped = Regex("^" + Regex.escape(basePath.absolutePath) + "(.*)").replace(input.absolutePath, "$1")
         val entry = Entry(
             stripped
+                .replaceFirst(Regex("${Regex.escape(File.separator)}((.*?)${Regex.escape(File.separator)})"), "")
                 .replace(Regex("^" + Regex.escape(File.separator)), "")
                 .replace(
                     Regex(Regex.escape("." + input.extension) + "$"),
@@ -104,8 +105,9 @@ class Main(private val namespace: String, private val bookId: String, private va
                 )
 
         )
-        val category = File(stripped).parent.trimStart(File.separator[0])
-        entry.data["category"] = "$namespace:" + category.ifEmpty { "main" }
+        val localeAndCategory = File(stripped).parentFile
+        entry.locale = try {localeAndCategory.parentFile.name} catch (e: Exception) {"none"}
+        entry.data["category"] = "$namespace:" + localeAndCategory.name.ifEmpty { "main" }
 
         for (line in input.readLines()) {
             var result = line
