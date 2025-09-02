@@ -16,7 +16,7 @@ class ModifierMatch: Processor {
             val expectedType = allowedModifiers[command]
             if (expectedType != null) {
                 if (!expectedType.java.isAssignableFrom(value::class.java)) throw AssertionError("Modifier $command is ${value::class.simpleName}, expected ${expectedType.simpleName}")
-                entry.data[command] = strToTyped(value)!!
+                entry.data[command.drop(2)] = strToTyped(value)!!
             } else entry.unknownModifiers[command] = strToTyped(value) ?: return@forEach
         }
 
