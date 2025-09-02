@@ -1,7 +1,7 @@
 package com.ssblur.mtp.components
 
 import components.Entry
-import org.gradle.internal.impldep.com.google.gson.Gson
+import org.gradle.internal.impldep.com.google.gson.GsonBuilder
 
 class Category(
     val name: String,
@@ -9,7 +9,7 @@ class Category(
     val icon: String = "minecraft:book"
 ) {
     fun serialize(): String? {
-        return Gson().toJson(this)
+        return GsonBuilder().setPrettyPrinting().create().toJson(this)
     }
 
     companion object {

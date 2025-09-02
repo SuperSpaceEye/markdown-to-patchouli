@@ -1,7 +1,7 @@
 package com.ssblur.mtp.components
 
 import components.Entry
-import org.gradle.internal.impldep.com.google.gson.Gson
+import org.gradle.internal.impldep.com.google.gson.GsonBuilder
 
 class Book(name: String) {
     val data = mutableMapOf<String, Any?>(
@@ -12,7 +12,7 @@ class Book(name: String) {
     )
 
     fun serialize(): String? {
-        return Gson().toJson(data)
+        return GsonBuilder().setPrettyPrinting().create().toJson(data)
     }
 
     companion object {

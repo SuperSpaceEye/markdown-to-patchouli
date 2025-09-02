@@ -28,15 +28,21 @@ class Main(private val namespace: String, private val bookId: String, private va
         ImageMatch(namespace),
         LinkMatch(),
         ExactMatch("", "\$(br)"),
-        RegexMatch("(^|^ )[*-] (.*)", "\\\$(li)$2\\\$()"), // start of str or start and space then * then space and text
-        RegexMatch("(^|^ )[*-] [*-] (.*)", "\\\$(li2)$2\\\$()"),
-        RegexMatch("(^|^ )[*-] [*-] [*-] (.*)", "\\\$(li3)$2\\\$()"),
-        RegexMatch("(^|^ )[*-] [*-] [*-] [*-] (.*)", "\\\$(li4)$2\\\$()"),
-        RegexMatch("\\*\\*(.*?)\\*\\*", "\\\$(l)$1\\\$()"),
-        RegexMatch("(\\s|^)__(.*?)__(\\s|\$)", "\\\$(l)$2\\\$()"), // only between __ when on left nothing or whitespace, on right nothing or whitespace
-        RegexMatch("\\*(.*?)\\*", "\\\$(o)$1\\\$()"),
-        RegexMatch("(\\s|^)_(.*?)_(\\s|\$)", "\\\$(o)$2\\\$()"), // only between _ when on left nothing or whitespace, on right nothing or whitespace
-        RegexMatch("~~(.*?)~~", "\\\$(s)$1\\\$()"),
+        //i'm adding spaces so that matches could be correctly applied
+        RegexMatch("(^|^ )[*-] [*-] [*-] [*-] (.*)", "\\\$(li4) $2 "),
+        RegexMatch("(^|^ )[*-] [*-] [*-] (.*)", "\\\$(li3) $2 "),
+        RegexMatch("(^|^ )[*-] [*-] (.*)", "\\\$(li2) $2 "),
+        RegexMatch("(^|^ )[*-] (.*)", "\\\$(li) $2 "), // start of str or start and space then * then space and text
+        RegexMatch("\\*\\*(.*?)\\*\\*", "\\\$(l) $1 \\\$()"),
+        RegexMatch("\\*(.*?)\\*", "\\\$(o) $1 \\\$()"),
+        RegexMatch("(\\s|^)__(.*?)__(\\s|\$)", "\\\$(l) $2 \\\$()"), // only between __ when on left nothing or whitespace, on right nothing or whitespace
+        RegexMatch("(\\s|^)_(.*?)_(\\s|\$)", "\\\$(o) $2 \\\$()"), // only between _ when on left nothing or whitespace, on right nothing or whitespace
+        RegexMatch("~~(.*?)~~", "\\\$(s) $1 \\\$()"),
+
+        //$(whatever) should remove spaces on right of themselves, $() should on left, $(li|li2|li3|li4|br) everywhere around itself
+        RegexMatch("(\\\$\\((l|o|s)\\))(\\s|)", "$1"),
+        RegexMatch("(\\s|)(\\\$\\((li|li2|li3|li4|br)\\))(\\s|)", "$2"),
+        RegexMatch("(\\s|)(\\\$\\(.*?\\))", "$2")
     )
 
     private val imageExtensions = arrayOf(
@@ -77,14 +83,6 @@ class Main(private val namespace: String, private val bookId: String, private va
                     .resolve(entry.category.lowercase().replace(Regex("^" + namespace + ":"), "") + ".json")
                 Files.createDirectories(Paths.get(file.parent))
                 file.writeText(Category.fromEntry(entry).serialize()!!)
-
-                file = path
-                    .resolve("en_us")
-                    .resolve("entries")
-                    .resolve(entry.id.lowercase() + ".json")
-                Files.createDirectories(Paths.get(file.parent))
-                entry.priority = true
-                file.writeText(entry.serialize()!!)
             } else {
                 val file = path
                     .resolve("en_us")
