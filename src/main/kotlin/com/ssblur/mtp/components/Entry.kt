@@ -3,19 +3,18 @@ package components
 import org.gradle.internal.impldep.com.google.gson.GsonBuilder
 import processor.RegexMatch
 
-class Entry(var id: String) {
-    var name = ""
-    var category = ""
-    var icon = "minecraft:book"
-    var pages: Array<Page> = arrayOf(Page())
-    var flag = ""
-    var advancement: String? = null
-    var priority = false
-    var secret = false
-    var readByDefault = false
-    var sortnum = 0
-    var turnin: String? = null
-    var extraRecipeMappings = object {}
+class Entry(id: String) {
+    val pages = mutableListOf(Page())
+
+    val data = mutableMapOf<String, Any>(
+        "id" to id,
+        "icon" to "minecraft:book",
+    )
+
+    val id: String get() = data["id"] as String
+    val name: String get() = data["name"] as String
+    val icon: String get() = data["icon"] as String
+    val category: String get() = data["category"] as String
 
     fun newPage(): Page {
         pages += Page()
@@ -68,29 +67,30 @@ class Entry(var id: String) {
     }
 
     fun finalize() {
-        name = pages[0].title
+        data["name"] = pages[0].title
         for(page in pages)
             page.text = page.text.replace(trimPattern, "")
     }
 
     override fun toString(): String {
-        return "$id:\n" +
-                "\tname: $name\n" +
-                "\tcategory: $category\n" +
-                "\ticon: $icon\n" +
+        return "${data["id"]}:\n" +
+                "\tname: ${data["name"]}\n" +
+                "\tcategory: ${data["category"]}\n" +
+                "\ticon: ${data["icon"]}\n" +
                 "\tpages: ${pages.joinToString(", ")}\n" +
-                "\tadvancement: $advancement\n" +
-                "\tflag: $flag\n" +
-                "\tpriority: $priority\n" +
-                "\tsecret: $secret\n" +
-                "\tread_by_default: $readByDefault\n" +
-                "\tsortnum: $sortnum\n" +
-                "\tturnin: $turnin\n" +
-                "\textra_recipe_mappings: $extraRecipeMappings"
+                "\tadvancement: ${data["advancement"]}\n" +
+                "\tflag: ${data["flag"]}\n" +
+                "\tpriority: ${data["priority"]}\n" +
+                "\tsecret: ${data["secret"]}\n" +
+                "\tread_by_default: ${data["read_by_default"]}\n" +
+                "\tsortnum: ${data["sortnum"]}\n" +
+                "\tturnin: ${data["turnin"]}\n" +
+                "\textra_recipe_mappings: ${data["extra_recipe_mappings"]}"
     }
 
     fun serialize(): String? {
-        return GsonBuilder().setPrettyPrinting().create().toJson(this)
+        data["pages"] = pages.map { it.serialize() }
+        return GsonBuilder().setPrettyPrinting().create().toJson(data)
     }
 
     companion object {

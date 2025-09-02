@@ -107,8 +107,7 @@ class Main(private val namespace: String, private val bookId: String, private va
 
         )
         val category = File(stripped).parent.trimStart(File.separator[0])
-        entry.category = "$namespace:" +
-                category.ifEmpty { "main" }
+        entry.data["category"] = "$namespace:" + category.ifEmpty { "main" }
 
         for (line in input.readLines()) {
             var result = line
