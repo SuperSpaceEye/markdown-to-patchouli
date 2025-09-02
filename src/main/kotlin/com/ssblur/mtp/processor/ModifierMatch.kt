@@ -14,10 +14,11 @@ class ModifierMatch: Processor {
             val (command, value) = items
 
             val expectedType = allowedModifiers[command]
+            val convertedValue = strToTyped(value) ?: throw AssertionError("Couldn't convert value \"$value\" of line \"$line\" to any known type (string/int/boolean)")
             if (expectedType != null) {
-                if (!expectedType.java.isAssignableFrom(value::class.java)) throw AssertionError("Modifier $command is ${value::class.simpleName}, expected ${expectedType.simpleName}")
-                entry.data[command.drop(2)] = strToTyped(value)!!
-            } else entry.unknownModifiers[command] = strToTyped(value) ?: return@forEach
+                if (expectedType != convertedValue::class) throw AssertionError("Modifier $command is ${convertedValue::class.simpleName}, expected ${expectedType.simpleName}")
+                entry.data[command.drop(2)] = convertedValue
+            } else entry.unknownModifiers[command] = convertedValue
         }
 
         return modifierPattern.replace(line, "")

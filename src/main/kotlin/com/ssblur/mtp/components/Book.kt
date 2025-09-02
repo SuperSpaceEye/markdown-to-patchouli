@@ -32,19 +32,19 @@ class Book(name: String) {
             "open_sound" to String::class,
             "flip_sound" to String::class,
             "index_icon" to String::class,
-            "pamphlet" to java.lang.Boolean::class,
-            "show_progress" to java.lang.Boolean::class,
+            "pamphlet" to Boolean::class,
+            "show_progress" to Boolean::class,
             "version" to Any::class,
             "subtitle" to String::class,
             "creative_tab" to String::class,
             "advancements_tab" to String::class,
-            "dont_generate_book" to java.lang.Boolean::class,
+            "dont_generate_book" to Boolean::class,
             "custom_book_item" to String::class,
-            "show_toasts" to java.lang.Boolean::class,
-            "use_blocky_font" to java.lang.Boolean::class,
-            "i18n" to java.lang.Boolean::class,
+            "show_toasts" to Boolean::class,
+            "use_blocky_font" to Boolean::class,
+            "i18n" to Boolean::class,
             "macros" to Any::class,
-            "pause_game" to java.lang.Boolean::class,
+            "pause_game" to Boolean::class,
         )
         private const val br = "\\\$\\(br\\)"
         private val pattern = Regex("^(\\s*$br\\s*)*(.*?)$br.*$")
@@ -52,8 +52,8 @@ class Book(name: String) {
             val book = Book(entry.name)
 
             entry.unknownModifiers.forEach { (k, v) ->
-                if (!allowedModifiers.contains(k)) return@forEach println("Unknown modifier $k is ignored")
-                if (!allowedModifiers[k]!!.java.isAssignableFrom(v::class.java)) throw AssertionError("Modifier $k is ${v::class.simpleName}, expected ${allowedModifiers[k]!!.simpleName}")
+                val expectedType = allowedModifiers[k] ?: return@forEach println("Unknown modifier $k is ignored")
+                if (expectedType != Any::class && expectedType != v::class) throw AssertionError("Modifier $k is ${v::class.simpleName}, expected ${allowedModifiers[k]!!.simpleName}")
                 book.data[k] = v
             }
 
