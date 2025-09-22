@@ -13,13 +13,15 @@ import javax.imageio.ImageIO
 class Main(private val namespace: String, private val bookId: String, private val path: String, private val outputPath: String) {
     private val basePath = File(path)
     private val list: ArrayList<Entry> = ArrayList()
-    private val guiDir = File(outputPath)
+    private val imagesDir = File(outputPath)
         .resolve("assets")
         .resolve(namespace)
-        .resolve("textures")
-        .resolve("gui");
+        .resolve("patchouli_assets")
 
     private val modifierMatch = ModifierMatch()
+
+    private val processedMiscPaths = mutableSetOf<String>()
+    private val toProcess = mutableListOf<() -> Unit>()
 
     private val processors = arrayOf(
         TitleMatch(),
@@ -51,6 +53,7 @@ class Main(private val namespace: String, private val bookId: String, private va
     private val transparent = Color(0f, 0f, 0f, 0f)
 
     fun generate() {
+        toProcess.forEach { it.invoke() }
         generateData()
     }
 
@@ -111,11 +114,11 @@ class Main(private val namespace: String, private val bookId: String, private va
 
         for (line in input.readLines()) {
             var result = line
-            result = modifierMatch.process(result, entry).trimEnd()
+            result = modifierMatch.process(result, entry, processedMiscPaths).trimEnd()
             //if there were only modifiers on the line, then do not save empty space
             if (result.isEmpty() && result != line) continue
             for (p in processors) {
-                result = p.process(result, entry).trimEnd() + " "
+                result = p.process(result, entry, processedMiscPaths).trimEnd() + " "
             }
             entry.addText(result)
         }
@@ -126,12 +129,16 @@ class Main(private val namespace: String, private val bookId: String, private va
 
     private fun copyToAssets(path: String) {
         val file = File(path)
-        val stripped = Regex("^" + Regex.escape(basePath.absolutePath + File.separator) + "(.*)")
-            .replace(file.absolutePath, "$1")
-        val out = guiDir.resolve(stripped)
+        val stripped = Regex("^" + Regex.escape(basePath.absolutePath + File.separator) + "(.*)").replace(file.absolutePath, "$1")
+        val out = imagesDir.resolve(stripped)
 
         if(!out.parentFile.exists())
             out.parentFile.mkdirs()
+
+        processedMiscPaths.add(stripped)
+        if (out.extension == "gif") {
+            file.copyTo(out.absoluteFile, true)
+        }
 
         if (out.extension in imageExtensions) {
             val original = ImageIO.read(file)
@@ -161,7 +168,7 @@ class Main(private val namespace: String, private val bookId: String, private va
                 out.delete()
             ImageIO.write(resized, file.extension, out.absoluteFile)
         } else if (!out.exists())
-            file.copyTo(out.absoluteFile)
+            file.copyTo(out.absoluteFile, true)
     }
 
     fun processDir(dir: String? = null) {
@@ -175,7 +182,9 @@ class Main(private val namespace: String, private val bookId: String, private va
                 processDir(file.absolutePath)
             else if (file.isFile)
                 if (file.extension.lowercase() == "md")
-                    list.add(processFile(file.absolutePath))
+                    toProcess.add {
+                        list.add(processFile(file.absolutePath))
+                    }
                 else
                     copyToAssets(file.absolutePath)
         }

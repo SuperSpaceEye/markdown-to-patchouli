@@ -1,6 +1,12 @@
 {.e_name "A Very Nice Title"}
 {.e_sortnum 0}
+{.e_use_default_path_for_images true}
+
+![some text](assets/test_gif3.gif)
 # Page Title
+                
+![some text](assets/test_gif3.gif)
+
 * hmmm
 * aaa_aaa_aaa
 * aaa__aaa__aaa

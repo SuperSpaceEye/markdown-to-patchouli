@@ -98,7 +98,10 @@ class Entry(id: String) {
     }
 
     fun serialize(): String? {
-        data["pages"] = pages.map { it.serialize() }
+        data["pages"] = pages
+            //sometimes entries may be empty when i don't want it, not sure how
+            .filter { !(it.type == "patchouli:text" && it.text.isEmpty() && it.title.isEmpty() && it.images.isEmpty()) }
+            .map { it.serialize() }
         return GsonBuilder().setPrettyPrinting().create().toJson(data)
     }
 
