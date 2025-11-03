@@ -172,10 +172,13 @@ class Main(private val namespace: String, private val bookId: String, private va
     }
 
     fun processDir(dir: String? = null) {
-        val input = if (dir != null)
+        val input = if (dir != null) {
             File(dir)
-        else
+        } else {
+            imagesDir.deleteRecursively()
+            imagesDir.mkdir()
             basePath
+        }
 
         for (file in input.listFiles()!!) {
             if (file.isDirectory)
